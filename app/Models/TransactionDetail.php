@@ -10,6 +10,7 @@ class TransactionDetail extends Model
     use HasFactory;
     protected $primaryKey = 'menu_id';
     protected $guarded = [];
+    protected $hidden = ['created_at','updated_at'];
 
     public function transaction()
     {

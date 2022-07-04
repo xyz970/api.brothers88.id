@@ -40,11 +40,18 @@ class LoginController extends Controller
         }
  	
  		//Token created, return with success response and jwt token
-         $data = [
+         $data = array(
              'user' => Auth::user(),
             'success' => true,
             'token' => $token,
-         ];
+         );
         return $this->successResponse("Berhasil Login",$data);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        JWTAuth::parseToken()->invalidate('true');
+        return $this->successResponse("Berhasil logout",'');
     }
 }
