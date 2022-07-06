@@ -65,8 +65,14 @@ class SuperAdminController extends Controller
 
     public function insertMenu(Request $request)
     {
-        $input = $request->only(['name','categories_id','price']);
-        Menu::create($input);
+        $input = $request->only(['name','price','category']);
+        $menu = Category::where('name','LIKE','%'.$input['category'].'%')->first();
+        $data = array(
+            'name'=>$input['name'],
+            'price' => $input['price'],
+            'categories_id'=>$menu->id
+        );
+        Menu::create($data);
         return $this->successResponse("Data berhasil dimasukkan","");
 
     }
