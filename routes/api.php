@@ -29,6 +29,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 //Admin Route
 Route::group(['prefix' => 'admin'], function () {
+    Route::get('table/list',[AdminController::class,'tableList']);
     Route::prefix('order')->group(function () {
         Route::get('list/', [AdminController::class, 'orderList']);
         Route::prefix('table')->group(function(){
