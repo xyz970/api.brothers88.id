@@ -33,6 +33,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('list/', [AdminController::class, 'orderList']);
         Route::prefix('table')->group(function(){
             Route::get('list/{table_id}',[AdminController::class,'tableDetail']);
+            Route::get('total/{table_id}',[AdminController::class,'getTotal']);
+            Route::post('pay/{table_id}',[AdminController::class,'tablePay']);
         });
     });
 });

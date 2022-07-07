@@ -39,4 +39,27 @@ class AdminController extends Controller
         $detail = TransactionDetail::with('menu')->where('transaction_id','=',$trans_id)->where('is_payed', '=', 'false')->get();
         return $this->successResponse("Detail Pesanan",$detail);
     }
+
+    public function getTotal($table_id)
+    {
+        $date = Carbon::now()->format('y-m-d');
+        $total = Transaction::where('table_id','=',$table_id)->where('date', '=', $date)->where('is_payed', '=', 'false')->sum('total');
+        return $this->successResponse("Total Transaksi",array('total'=>$total));
+
+    }
+
+    public function tablePay(Request $request,$table_id)
+    {
+        $date = Carbon::now()->format('y-m-d');
+        $input = $request->only(['pay']);
+        $total = TransactionDetail::where('table_id','=',$table_id)->where('is_payed', '=', 'false')->sum('total');
+        if ($input['pay'] >= $total) {
+            Transaction::where('date', '=', $date)->where('is_payed', '=', 'false')->where('table_id','=',$table_id)->update(['is_payed'=>'true']);
+            TransactionDetail::where('table_id','=',$table_id)->update(['is_payed'=>'true']);
+            return $this->successResponse('Pesanan berhasil dibayar',"");
+        }else {
+            return $this->successResponse("Maaf, uang tidak cukup","",402);
+        }
+
+    }
 }
