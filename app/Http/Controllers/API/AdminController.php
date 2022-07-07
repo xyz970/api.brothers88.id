@@ -54,9 +54,14 @@ class AdminController extends Controller
         $input = $request->only(['pay']);
         $total = TransactionDetail::where('table_id','=',$table_id)->where('is_payed', '=', 'false')->sum('total');
         if ($input['pay'] >= $total) {
+            $data = array(
+                'total'=>$total,
+                'pay'=>$input['pay'],
+                'back'=>$input['pay']-$total
+            );
             Transaction::where('date', '=', $date)->where('is_payed', '=', 'false')->where('table_id','=',$table_id)->update(['is_payed'=>'true']);
-            TransactionDetail::where('table_id','=',$table_id)->update(['is_payed'=>'true']);
-            return $this->successResponse('Pesanan berhasil dibayar',"");
+            // TransactionDetail::where('table_id','=',$table_id)->update(['is_payed'=>'true']);
+            return $this->successResponse('Pesanan berhasil dibayar',$data);
         }else {
             return $this->successResponse("Maaf, uang tidak cukup","",402);
         }
